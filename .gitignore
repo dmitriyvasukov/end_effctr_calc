@@ -1,0 +1,15 @@
+# Игнорируем папку eigen
+eigen/
+
+# Файлы от сборки, если они появятся
+*.exe
+*.o
+*.out
+
+# Системные файлы Windows
+Thumbs.db
+.DS_Store
+
+# VS Code
+.vscode/
+
