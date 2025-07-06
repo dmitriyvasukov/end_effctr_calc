@@ -18,6 +18,11 @@ class Link {
         float length;
         LinkType type;
         OffSetAxis axis;
+        Vector3f form_offset_vector() {
+            Vector3f offset_vector{0,0,0};
+            offset_vector[axis] = length;
+            return offset_vector;
+        }
     Link(float length, LinkType type, OffSetAxis axis):
         length(length), type(type), axis(axis) {};
 
@@ -33,6 +38,11 @@ class Manipulator {
         if (init_configuration[0] == Matrix3f::Identity()) {
             constant_geometry[0] = Matrix4f::Identity();
         } 
+
+        else {
+            constant_geometry[0].block<3,3>(0,0) = init_configuration[0];
+            constant_geometry[0].block<3,1>(0,4) = links[0].form_offset_vector();
+        }
     }
 };
 
