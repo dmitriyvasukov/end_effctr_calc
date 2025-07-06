@@ -29,11 +29,11 @@ class Link {
 
 };
 class Manipulator {
-
+    public:
     vector<Link>links;
     vector<Matrix3f>init_configuration;
 
-    vector<Matrix3f> const_geometry() {
+    vector<Matrix4f> const_geometry() {
         vector<Matrix4f>constant_geometry(links.size());
         if (init_configuration[0] == Matrix3f::Identity()) {
             constant_geometry[0] = Matrix4f::Identity();
@@ -48,10 +48,19 @@ class Manipulator {
             constant_geometry[i].block<3,3>(0,0) = init_configuration[0];
             constant_geometry[i].block<3,1>(0,3) = links[i].form_offset_vector();
         }
+
+        return constant_geometry;
     }
+
+
+
+    Manipulator(vector<Link>links, vector<Matrix3f>init_configuration): 
+        links(links), init_configuration(init_configuration) {};
 };
 
 int main() {
+
+    // Конфигурация
     Matrix3f M0 = Matrix3f::Identity();
 
     Matrix3f M1;
@@ -69,7 +78,18 @@ int main() {
           1, 0, 0,
           0, 1, 0;
 
+    Link link1(0.8, ROTATING, Z);
+    Link link2(0.6, ROTATING, X);
+    Link link3(0.5, ROTATING, X);
 
+    vector<Matrix3f>config{M0,M1,M2,M3};
+    vector<Link>links{link1,link2,link3};
     
+    Manipulator robot(links, config);
+
+    vector<Matrix4f>constant_geometry = robot.const_geometry();
+
+    cout << constant_geometry[0];
+
     return 0;
 }
