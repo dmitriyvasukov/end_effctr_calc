@@ -34,14 +34,19 @@ class Manipulator {
     vector<Matrix3f>init_configuration;
 
     vector<Matrix3f> const_geometry() {
-        vector<Matrix4f>constant_geometry;
+        vector<Matrix4f>constant_geometry(links.size());
         if (init_configuration[0] == Matrix3f::Identity()) {
             constant_geometry[0] = Matrix4f::Identity();
         } 
 
         else {
             constant_geometry[0].block<3,3>(0,0) = init_configuration[0];
-            constant_geometry[0].block<3,1>(0,4) = links[0].form_offset_vector();
+            constant_geometry[0].block<3,1>(0,3) = links[0].form_offset_vector();
+        }
+
+        for(int i = 1; i < init_configuration.size(); i++) {
+            constant_geometry[i].block<3,3>(0,0) = init_configuration[0];
+            constant_geometry[i].block<3,1>(0,3) = links[i].form_offset_vector();
         }
     }
 };
