@@ -34,20 +34,17 @@ vector<Matrix3f> initial_position;
 public:
 vector<Matrix4f> constant_geometry() {
     vector<Matrix4f> constant_geometry;
-    constant_geometry.push_back(Matrix4f::Identity()); // A00*
+    constant_geometry.push_back(Matrix4f::Identity()); 
 
     for (size_t i = 1; i < initial_position.size(); i++) {
         Matrix4f A = Matrix4f::Identity();
         A.block<3,3>(0,0) = initial_position[i];
-        A.block<3,1>(0,3) = links[i - 1].offset_vector; // Важно!
+        A.block<3,1>(0,3) = links[i - 1].offset_vector; 
         constant_geometry.push_back(A);
     }
 
     return constant_geometry;
 }
-
-
-
 
     manipulator(vector<link>links,vector<Matrix3f> initial_position ) : links(links), initial_position(initial_position) {
 
