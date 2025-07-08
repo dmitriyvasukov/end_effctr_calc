@@ -30,10 +30,9 @@ int main() {
 
     manipulator robot(links, config);
 
-    vector<Matrix4f> tm = robot.translation_matrix();
+    Matrix4f tm = robot.translation_matrix();
 
-    for(size_t i = 0; i < tm.size(); i++) {
-        cout << tm[i] << endl;
-        cout << endl;
-    }
+    
+
+    cout  << tm;
 }

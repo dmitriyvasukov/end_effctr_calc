@@ -50,7 +50,7 @@ vector<Matrix4f> constant_geometry() {
     return constant_geometry;
 }
 
-vector<Matrix4f>translation_matrix() {
+Matrix4f translation_matrix() {
     vector<Matrix4f> relative_matrices;
     vector<Matrix4f> translation_matrices;
     vector<Matrix4f> cg = constant_geometry();
@@ -70,8 +70,17 @@ vector<Matrix4f>translation_matrix() {
         translation_matrices.push_back(cg[i] * relative_matrices[i]);
     }
 
-    return translation_matrices;
+
+    final_matrix = translation_matrices[0];
+    for(size_t i =  1; i < translation_matrices.size(); i++) {
+        final_matrix*=translation_matrices[i];
+    }
+
+     return final_matrix;
 }
+
+
+
 
     manipulator(vector<link>links,vector<Matrix3f> initial_position ) : links(links), initial_position(initial_position) {
 
