@@ -66,11 +66,9 @@ Matrix4f translation_matrix() {
             G(2,3) = links[i].angle;
         }
 
-        // Множим: T = T * M[i] * G
         T = T * cg[i] * G;
     }
 
-    // Не забываем про финальное смещение (последнее звено)
     T = T * cg.back();
 
     return T;
