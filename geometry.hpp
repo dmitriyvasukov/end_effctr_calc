@@ -51,34 +51,30 @@ vector<Matrix4f> constant_geometry() {
 }
 
 Matrix4f translation_matrix() {
-    vector<Matrix4f> relative_matrices;
-    vector<Matrix4f> translation_matrices;
+    Matrix4f T = Matrix4f::Identity();
+
     vector<Matrix4f> cg = constant_geometry();
-    Matrix4f final_matrix;
-    for(size_t i = 0; i < links.size(); i++ ) {
-        Matrix4f T;
-        T << 
-        cos(links[i].type * links[i].angle), -sin(links[i].type * links[i].angle), 0, 0,
-        sin(links[i].type * links[i].angle), cos(links[i].type * links[i].angle), 0, 0,
-        0,0,(1-links[i].type)*links[i].angle,0,
-        0,0,0,1;
 
-        relative_matrices.push_back(T);
+    for (size_t i = 0; i < links.size(); ++i) {
+        Matrix4f G = Matrix4f::Identity();
+
+        if (links[i].type == r) {
+            // Вращение вокруг Z — в локальной СК
+            G.block<3,3>(0,0) = AngleAxisf(links[i].angle, Vector3f::UnitZ()).toRotationMatrix();
+        } else {
+            // Поступательное — сдвиг вдоль Z
+            G(2,3) = links[i].angle;
+        }
+
+        // Множим: T = T * M[i] * G
+        T = T * cg[i] * G;
     }
 
-    for(size_t i = 0; i < cg.size()-1; i++) {
-        translation_matrices.push_back(cg[i] * relative_matrices[i]);
-    }
+    // Не забываем про финальное смещение (последнее звено)
+    T = T * cg.back();
 
-
-    final_matrix = translation_matrices[0];
-    for(size_t i =  1; i < translation_matrices.size(); i++) {
-        final_matrix*=translation_matrices[i];
-    }
-
-     return final_matrix;
+    return T;
 }
-
 
 
 
