@@ -22,9 +22,9 @@ setlocale(LC_ALL, "Russian");
     
     vector<Matrix3f>config{M0,M1,M2,M3};
 
-    link link1(7, Z, deg2rad(-30.0), r);
-    link link2(4, X, deg2rad(-10.0), r);
-    link link3(4, X, deg2rad(-60.0), p);
+    link link1(7, Z, deg2rad(30.0), r);
+    link link2(4, X, deg2rad(10.0), r);
+    link link3(4, Z, 6.0, p);
 
     vector<link>links{link1,link2,link3};
 
@@ -37,6 +37,15 @@ setlocale(LC_ALL, "Russian");
 
     Matrix4f tm = robot.translation_matrix();
 
-    cout << tm * Vector4f(0,0,0,1);
+Vector4f p_tool_local(1, 1, 1, 1); 
+Vector4f p_tool_global = tm * p_tool_local;
+
+Vector3f target_point = p_tool_global.head<3>();
+
+// Вектор от последнего звена к этой точке
+Vector3f from_last_link = target_point - tm.block<3,1>(0,3);
+
+cout << "GV: " << target_point.transpose() << endl;
+cout << "FLJ: " << from_last_link.transpose() << endl;
 
 }
